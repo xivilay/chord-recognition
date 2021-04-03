@@ -1,0 +1,6 @@
+[submodule "juce-react"]
+	path = juce-react
+	url = https://github.com/nick-thompson/react-juce.git
+[submodule "jsui"]
+	path = jsui
+	url = https://github.com/xivilay/react-juce-chord-recognition-js.git
