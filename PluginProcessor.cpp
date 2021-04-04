@@ -132,12 +132,16 @@ AudioProcessorEditor* ChordProcessor::createEditor() {
 
     auto* editor = new reactjuce::GenericEditor(*this, bundle);
 
-    editor->setResizable(true, true);
-    editor->setResizeLimits(400, 240, 400 * 2, 240 * 2);
-    editor->getConstrainer()->setFixedAspectRatio(400.0 / 240.0);
-    editor->setSize(400, 240);
+    short width = 600;
+    short height = 240;
+    short updateInterval = 100;
 
-    startTimer(100);
+    editor->setResizable(true, true);
+    editor->setResizeLimits(width, height, width * 2, height * 2);
+    editor->getConstrainer()->setFixedAspectRatio(width / height);
+    editor->setSize(width, height);
+
+    startTimer(updateInterval);
 
     return editor;
 }
