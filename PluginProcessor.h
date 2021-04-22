@@ -1,10 +1,8 @@
 #pragma once
 
-#include "../JuceLibraryCode/JuceHeader.h"
+#include <JuceHeader.h>
 
 //==============================================================================
-/**
-*/
 class ChordProcessor  : public AudioProcessor, private Timer
 {
 public:
@@ -16,9 +14,9 @@ public:
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
     void releaseResources() override;
 
-   #ifndef JucePlugin_PreferredChannelConfigurations
-    bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
-   #endif
+    #ifndef JucePlugin_PreferredChannelConfigurations
+        bool isBusesLayoutSupported (const BusesLayout& layouts) const override;
+    #endif
 
     void processBlock (AudioBuffer<float>&, MidiBuffer&) override;
 
@@ -46,13 +44,10 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     //==============================================================================
-    AudioProcessorValueTreeState& getValueTreeState() { return params; }
-    
     void timerCallback() override;
 
 private:
     //==============================================================================
-    AudioProcessorValueTreeState params;
     std::unordered_set<short> notes;
 
     //==============================================================================

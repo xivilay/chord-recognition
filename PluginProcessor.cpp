@@ -1,38 +1,16 @@
 #include "PluginProcessor.h"
 
-AudioProcessorValueTreeState::ParameterLayout createParameterLayout()
-{
-    AudioProcessorValueTreeState::ParameterLayout params (
-        std::make_unique<AudioParameterFloat>(
-            "MainGain",
-            "Gain",
-            NormalisableRange<float>(0.0, 1.0),
-            0.8,
-            String(),
-            AudioProcessorParameter::genericParameter,
-            [](float value, int /* maxLength */) {
-                return String(Decibels::gainToDecibels(value), 1) + "dB";
-            },
-            nullptr
-        ),
-        std::make_unique<AudioParameterBool>(
-            "MainMute",
-            "Mute",
-            false
-       )
-    );
-
-    return params;
-}
-
 //==============================================================================
 ChordProcessor::ChordProcessor()
-     : AudioProcessor (BusesProperties()
-                       .withInput  ("Input",  AudioChannelSet::stereo(), true)
-                       .withOutput ("Output", AudioChannelSet::stereo(), true)),
-       params(*this, nullptr, JucePlugin_Name, createParameterLayout())
-{
-}
+    : AudioProcessor(
+          BusesProperties()
+            #if !JucePlugin_IsMidiEffect
+                #if !JucePlugin_IsSynth
+                    .withInput("Input", juce::AudioChannelSet::stereo(), true)
+                #endif
+                    .withOutput("Output", juce::AudioChannelSet::stereo(), true)
+                #endif
+    ) {}
 
 ChordProcessor::~ChordProcessor()
 {
@@ -68,11 +46,11 @@ bool ChordProcessor::isMidiEffect() const {
     #endif
 }
 
-double ChordProcessor::getTailLengthSeconds() const { return 0.0; }
-int ChordProcessor::getNumPrograms() { return 1; }
-int ChordProcessor::getCurrentProgram() { return 0; }
-void ChordProcessor::setCurrentProgram (int /* index */) {}
-const String ChordProcessor::getProgramName (int /* index */) { return {}; }
+double ChordProcessor::getTailLengthSeconds() const             { return 0.0; }
+int ChordProcessor::getNumPrograms()                            { return 1; }
+int ChordProcessor::getCurrentProgram()                         { return 0; }
+void ChordProcessor::setCurrentProgram (int /* index */)        {}
+const String ChordProcessor::getProgramName (int /* index */)   { return {}; }
 void ChordProcessor::changeProgramName (int /* index */, const String& /* newName */) {}
 
 //==============================================================================
@@ -92,11 +70,12 @@ bool ChordProcessor::isBusesLayoutSupported(
             layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
             return false;
 
-                // This checks if the input layout matches the output layout
-            #if !JucePlugin_IsSynth
+                
+    #if !JucePlugin_IsSynth
+        // This checks if the input layout matches the output layout
         if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
             return false;
-            #endif
+    #endif
 
         return true;
     #endif
