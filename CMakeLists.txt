@@ -6,7 +6,7 @@ set(sources src/PluginProcessor.cpp)
 set(targets VST3 Standalone) # AAX AU AUv3 Standalone Unity VST VST3
 
 set(REACT_JUCE_DIR "juce-react/react_juce")
-set(JUCE_DIR "../JUCE")
+set(JUCE_DIR "juce-react/ext/juce")
 
 project(${pluginName} VERSION ${version})
 
