@@ -6,7 +6,7 @@ set(sources src/PluginProcessor.cpp)
 set(targets VST3 Standalone) # AAX AU AUv3 Standalone Unity VST VST3
 
 set(REACT_JUCE_DIR "juce-react/react_juce")
-set(JUCE_DIR "juce-react/ext/juce")
+set(JUCE_DIR "../JUCE")
 
 project(${pluginName} VERSION ${version})
 
@@ -56,23 +56,11 @@ target_include_directories(${pluginName} PRIVATE react_juce/)
 target_compile_definitions(${pluginName} PRIVATE
     SOURCE_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
     JUCE_VST3_CAN_REPLACE_VST2=0
+    JUCE_COPY_PLUGIN_AFTER_BUILD=TRUE
+    JUCE_PLUGIN_COPY_DIR="${CMAKE_CURRENT_SOURCE_DIR}"
 )
 
-if (ANDROID)
-    # dependencies  
-    find_library(log "log")
-    find_library(android "android")
-    find_library(glesv2 "GLESv2")
-    find_library(egl "EGL")
-    set(cpufeatures_lib "cpufeatures")
-    set(oboe_lib "oboe")
-
-    target_include_directories(${pluginName} PRIVATE 
-        "${ANDROID_NDK}/sources/android/cpufeatures" "${OBOE_DIR}/include"
-    )
-endif (ANDROID)
-
-target_link_libraries(${pluginName} PRIVATE
+target_link_libraries(${pluginName} PUBLIC
     juce::juce_recommended_config_flags
     juce::juce_recommended_lto_flags
     juce::juce_recommended_warning_flags
@@ -86,12 +74,4 @@ target_link_libraries(${pluginName} PRIVATE
     juce::juce_gui_basics
 
     react_juce
-
-    # ANDROID related libs
-    ${log}
-    ${android}
-    ${glesv2}
-    ${egl}
-    ${cpufeatures_lib}
-    ${oboe_lib}
 )

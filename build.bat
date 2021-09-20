@@ -1,5 +1,5 @@
 @echo off
+rmdir build /s/q
 mkdir build
 cd /d build
-for /F "delims=" %%i in ('dir /b') do (rmdir "%%i" /s/q || del "%%i" /s/q)
-cmake -A x64 ../ && msbuild /p:Configuration=Release MidiChordRecognition.sln
+cmake -A x64 ../ && cmake --build . --config Release

@@ -3,13 +3,7 @@
 //==============================================================================
 ChordProcessor::ChordProcessor()
     : AudioProcessor(
-          BusesProperties()
-            #if !JucePlugin_IsMidiEffect
-                #if !JucePlugin_IsSynth
-                    .withInput("Input", juce::AudioChannelSet::stereo(), true)
-                #endif
-                    .withOutput("Output", juce::AudioChannelSet::stereo(), true)
-                #endif
+          BusesProperties().withOutput("Output", juce::AudioChannelSet::stereo(), true)
     ) {}
 
 ChordProcessor::~ChordProcessor()
@@ -23,27 +17,15 @@ const String ChordProcessor::getName() const {
 }
 
 bool ChordProcessor::acceptsMidi() const {
-    #if JucePlugin_WantsMidiInput
-        return true;
-    #else
-        return false;
-    #endif
+    return true;
 }
 
 bool ChordProcessor::producesMidi() const {
-    #if JucePlugin_ProducesMidiOutput
-        return true;
-    #else
-        return false;
-    #endif
+    return false;
 }
 
 bool ChordProcessor::isMidiEffect() const {
-    #if JucePlugin_IsMidiEffect
-        return true;
-    #else
-        return false;
-    #endif
+    return false;
 }
 
 double ChordProcessor::getTailLengthSeconds() const             { return 0.0; }
@@ -106,8 +88,8 @@ void ChordProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMe
 bool ChordProcessor::hasEditor() const { return true; }
 
 AudioProcessorEditor* ChordProcessor::createEditor() {
-    File sourceDir = File(SOURCE_DIR);
-    File bundle = sourceDir.getChildFile("jsui/build/js/main.js");
+    File exeDir = File::getSpecialLocation(File::currentExecutableFile).getParentDirectory();
+    File bundle = exeDir.getChildFile("js/main.js");
 
     auto* editor = new reactjuce::GenericEditor(*this, bundle);
 

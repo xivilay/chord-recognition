@@ -1,0 +1,24 @@
+{
+    "C_Cpp.intelliSenseEngine": "Disabled",
+    "C_Cpp.default.cppStandard": "c++17",
+    "cmake.buildDirectory": "${workspaceFolder}/build",
+    "clangd.arguments": [
+        "-clang-tidy",
+        "-background-index",
+        "-compile-commands-dir=${workspaceFolder}/build",
+        "-header-insertion=never",
+        "--query-driver=\"/usr/bin/clang++\""
+    ],
+    "cmake.ctestArgs": [
+        "--verbose"
+    ],
+    "cmake.configureArgs": [
+    ],
+    "cmake.preferredGenerators": [
+        "Ninja",
+        "Unix Makefiles"
+    ],
+    "cmake.configureOnOpen": true,
+    "lldb.showDisassembly": "auto",
+    "lldb.dereferencePointers": true
+}
