@@ -16,14 +16,18 @@ jobs:
         submodules: true
         token: ${{secrets.PAT}}
 
+    - name: Install Submodule Dependencies
+      working-directory: ./jsui
+      run: yarn install
+
     - name: Build JS
-      run: build_js.bat
+      run: ./build_js.bat
 
     - name: Build
-      run: build.bat
+      run: ./build.bat
 
     - name: Get artefacts
-      run: post_build.bat
+      run: ./post_build.bat
 
     - name: Zip
       working-directory: ${{ env.BUILD_DIR }}
