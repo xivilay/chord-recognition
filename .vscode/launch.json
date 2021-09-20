@@ -7,6 +7,13 @@
             "program": "${command:cmake.launchTargetPath}",
             "args": [],
             "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "attach",
+            "name": "Attach to AudioHost",
+            "program": "AudioPluginHost.exe",
+            "pid": "${command:pickMyProcess}"
         }
     ]
 }

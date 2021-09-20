@@ -1,0 +1,35 @@
+name: CMakeBuild
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Get latest CMake
+      uses: lukka/get-cmake@latest
+
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        submodules: true
+
+    - name: Build JS
+      run: build_js.bat
+
+    - name: Build
+      run: build.bat
+
+    - name: Get artefacts
+      run: post_build.bat
+
+    - name: Zip
+      working-directory: ${{ env.BUILD_DIR }}
+      run: cmake -E tar cfv build/windows.zip out
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        path: build/windows.zip
+        name: windows-x64

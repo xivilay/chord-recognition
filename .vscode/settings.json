@@ -15,6 +15,7 @@
     "cmake.configureArgs": [
     ],
     "cmake.preferredGenerators": [
+        "Visual Studio 16 2019",
         "Ninja",
         "Unix Makefiles"
     ],
