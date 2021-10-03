@@ -2,14 +2,10 @@
 
 //==============================================================================
 ChordProcessor::ChordProcessor()
-    : AudioProcessor(
-          BusesProperties().withOutput("Output", juce::AudioChannelSet::stereo(), true)
-    ) {}
+    : AudioProcessor(BusesProperties().withOutput(
+          "Output", juce::AudioChannelSet::stereo(), true)) {}
 
-ChordProcessor::~ChordProcessor()
-{
-    stopTimer();
-}
+ChordProcessor::~ChordProcessor() { stopTimer(); }
 
 //==============================================================================
 const String ChordProcessor::getName() const {
@@ -93,9 +89,9 @@ AudioProcessorEditor* ChordProcessor::createEditor() {
 
     auto* editor = new reactjuce::GenericEditor(*this, bundle);
 
-    short width = 600;
-    short height = 240;
-    short updateInterval = 100;
+    short width = 740;
+    short height = 840;
+    short updateInterval = 25;
 
     editor->setResizable(true, true);
     editor->setResizeLimits(width, height, width * 2, height * 2);
