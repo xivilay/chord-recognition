@@ -56,14 +56,14 @@ class ChordProcessor : public AudioProcessor, private Timer {
         if (auto* editor = dynamic_cast<reactjuce::GenericEditor*>(getActiveEditor())) {
             std::string multi;
 
-            for (const short& x : notes) multi += std::to_string(x) + ",";
+            for (const int& x : notes) multi += std::to_string(x) + ",";
 
             editor->getReactAppRoot().dispatchEvent("activeNotesChanged", static_cast<String>(multi));
         }
     }
 
    private:
-    std::unordered_set<short> notes;
+    std::unordered_set<int> notes;
 
     const short WIDTH = 740;
     const short HEIGHT = 840;
@@ -79,6 +79,11 @@ class ChordProcessor : public AudioProcessor, private Timer {
                 notes.erase(num);
             }
         }
+    }
+
+    static BusesProperties getBusesLayout() {
+        return PluginHostType().isAbletonLive() ? BusesProperties().withOutput("out", AudioChannelSet::stereo())
+                                                : BusesProperties();
     }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ChordProcessor)
