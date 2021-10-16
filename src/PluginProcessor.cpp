@@ -1,72 +1,31 @@
 #include "PluginProcessor.h"
 
-//==============================================================================
 ChordProcessor::ChordProcessor()
-    : AudioProcessor(BusesProperties().withOutput(
-          "Output", juce::AudioChannelSet::stereo(), true)) {}
+    : AudioProcessor(BusesProperties()) {}
 
 ChordProcessor::~ChordProcessor() { stopTimer(); }
 
-//==============================================================================
-const String ChordProcessor::getName() const {
-    return JucePlugin_Name;
-}
+const String ChordProcessor::getName() const { return JucePlugin_Name; }
 
-bool ChordProcessor::acceptsMidi() const {
-    return true;
-}
+bool ChordProcessor::acceptsMidi() const { return true; }
+bool ChordProcessor::producesMidi() const { return false; }
+bool ChordProcessor::isMidiEffect() const { return false; }
 
-bool ChordProcessor::producesMidi() const {
-    return false;
-}
-
-bool ChordProcessor::isMidiEffect() const {
-    return false;
-}
-
-double ChordProcessor::getTailLengthSeconds() const             { return 0.0; }
-int ChordProcessor::getNumPrograms()                            { return 1; }
-int ChordProcessor::getCurrentProgram()                         { return 0; }
-void ChordProcessor::setCurrentProgram (int /* index */)        {}
-const String ChordProcessor::getProgramName (int /* index */)   { return {}; }
-void ChordProcessor::changeProgramName (int /* index */, const String& /* newName */) {}
-
-//==============================================================================
-void ChordProcessor::prepareToPlay(double sampleRate, int /* samplesPerBlock */) {}
+double ChordProcessor::getTailLengthSeconds() const { return 0.0; }
+int ChordProcessor::getNumPrograms() { return 1; }
+int ChordProcessor::getCurrentProgram() { return 0; }
+void ChordProcessor::setCurrentProgram(int) {}
+const String ChordProcessor::getProgramName(int) { return {}; }
+void ChordProcessor::changeProgramName(int, const String&) {}
+void ChordProcessor::prepareToPlay(double, int) {}
 void ChordProcessor::releaseResources() {}
 
-#ifndef JucePlugin_PreferredChannelConfigurations
-bool ChordProcessor::isBusesLayoutSupported(
-    const BusesLayout& layouts) const {
-    #if JucePlugin_IsMidiEffect
-        ignoreUnused(layouts);
-        return true;
-    #else
-        // This is the place where you check if the layout is supported.
-        // In this template code we only support mono or stereo.
-        if (layouts.getMainOutputChannelSet() != AudioChannelSet::mono() &&
-            layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
-            return false;
-
-                
-    #if !JucePlugin_IsSynth
-        // This checks if the input layout matches the output layout
-        if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
-            return false;
-    #endif
-
-        return true;
-    #endif
-}
-#endif
+bool ChordProcessor::isBusesLayoutSupported(const BusesLayout&) const { return false; }
 
 void ChordProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
     ScopedNoDenormals noDenormals;
-    auto totalNumInputChannels = getTotalNumInputChannels();
-    auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
-        buffer.clear(i, 0, buffer.getNumSamples());
+    buffer.clear();
 
     for (const auto metadata : midiMessages) {
         auto message = metadata.getMessage();
@@ -80,7 +39,6 @@ void ChordProcessor::processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMe
     }
 }
 
-//==============================================================================
 bool ChordProcessor::hasEditor() const { return true; }
 
 AudioProcessorEditor* ChordProcessor::createEditor() {
@@ -105,7 +63,6 @@ AudioProcessorEditor* ChordProcessor::createEditor() {
 
 void ChordProcessor::timerCallback() {
     if (auto* editor = dynamic_cast<reactjuce::GenericEditor*>(getActiveEditor())) {
-
         std::string multi;
 
         for (const short& x : notes) multi += std::to_string(x) + ",";
@@ -114,10 +71,7 @@ void ChordProcessor::timerCallback() {
     }
 }
 
-//==============================================================================
-void ChordProcessor::getStateInformation(MemoryBlock& /* destData */) {}
-void ChordProcessor::setStateInformation(const void* /* data */, int /* sizeInBytes */) {}
+void ChordProcessor::getStateInformation(MemoryBlock&) {}
+void ChordProcessor::setStateInformation(const void*, int) {}
 
-AudioProcessor* JUCE_CALLTYPE createPluginFilter() {
-    return new ChordProcessor();
-}
+AudioProcessor* JUCE_CALLTYPE createPluginFilter() { return new ChordProcessor(); }
