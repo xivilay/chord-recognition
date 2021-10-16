@@ -30,16 +30,7 @@ class ChordProcessor : public AudioProcessor, private Timer {
 
         buffer.clear();
 
-        for (const auto metadata : midiMessages) {
-            auto message = metadata.getMessage();
-            short num = message.getNoteNumber();
-
-            if (message.isNoteOn()) {
-                notes.insert(num);
-            } else if (message.isNoteOff()) {
-                notes.erase(num);
-            }
-        }
+        storeNotes(midiMessages);
     }
 
     bool hasEditor() const { return true; }
@@ -76,6 +67,19 @@ class ChordProcessor : public AudioProcessor, private Timer {
 
     const short WIDTH = 740;
     const short HEIGHT = 840;
+
+    void storeNotes(MidiBuffer& midiMessages) {
+        for (const auto metadata : midiMessages) {
+            auto message = metadata.getMessage();
+            const auto num = message.getNoteNumber();
+
+            if (message.isNoteOn()) {
+                notes.insert(num);
+            } else if (message.isNoteOff()) {
+                notes.erase(num);
+            }
+        }
+    }
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ChordProcessor)
 };
