@@ -22,6 +22,9 @@ class ChordProcessor : public AudioProcessor, private Timer {
 
     bool isBusesLayoutSupported(const BusesLayout&) const { return false; }
 
+    void getStateInformation(MemoryBlock&) {}
+    void setStateInformation(const void*, int) {}
+
     void processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) {
         ScopedNoDenormals noDenormals;
 
@@ -46,14 +49,12 @@ class ChordProcessor : public AudioProcessor, private Timer {
 
         auto* editor = new reactjuce::GenericEditor(*this, bundle);
 
-        short width = 740;
-        short height = 840;
         short updateInterval = 25;
 
         editor->setResizable(true, true);
-        editor->setResizeLimits(width, height, width * 2, height * 2);
-        editor->getConstrainer()->setFixedAspectRatio(width / height);
-        editor->setSize(width, height);
+        editor->setResizeLimits(WIDTH, HEIGHT, WIDTH * 2, HEIGHT * 2);
+        editor->getConstrainer()->setFixedAspectRatio(WIDTH / HEIGHT);
+        editor->setSize(WIDTH, HEIGHT);
 
         startTimer(updateInterval);
 
@@ -70,11 +71,11 @@ class ChordProcessor : public AudioProcessor, private Timer {
         }
     }
 
-    void getStateInformation(MemoryBlock&) {}
-    void setStateInformation(const void*, int) {}
-
    private:
     std::unordered_set<short> notes;
+
+    const short WIDTH = 740;
+    const short HEIGHT = 840;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ChordProcessor)
 };
