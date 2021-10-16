@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 
 set(version 0.1.0)
 set(pluginName MidiChordRecognition)
-set(sources src/PluginProcessor.cpp)
+set(sources src/Main.cpp)
 set(targets VST3 Standalone) # AAX AU AUv3 Standalone Unity VST VST3
 
 set(REACT_JUCE_DIR "juce-react/react_juce")
