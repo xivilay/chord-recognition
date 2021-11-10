@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.15)
 set(version 0.1.0)
 set(pluginName MidiChordRecognition)
 set(sources src/Main.cpp)
-set(targets VST3 Standalone)
+set(targets VST3)
 
 set(REACT_JUCE "react_juce")
 set(REACT_JUCE_DIR "juce-react/${REACT_JUCE}")
@@ -26,6 +26,10 @@ juce_add_plugin(${pluginName}
     PLUGIN_CODE Xiv7
     FORMATS ${targets}
     PRODUCT_NAME "${pluginName}"
+)
+
+juce_add_binary_data(BinaryData SOURCES
+    "jsui/build/js/main.js"
 )
 
 juce_generate_juce_header(${pluginName})
@@ -51,4 +55,5 @@ target_link_libraries(${pluginName} PUBLIC
     juce::juce_gui_basics
 
     ${REACT_JUCE}
+    BinaryData
 )

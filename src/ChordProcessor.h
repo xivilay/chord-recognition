@@ -1,5 +1,7 @@
 #include <JuceHeader.h>
 
+#include "CustomEditor.h"
+
 class ChordProcessor : public AudioProcessor, private Timer {
    public:
     ChordProcessor() : AudioProcessor(BusesProperties()) {}
@@ -35,10 +37,7 @@ class ChordProcessor : public AudioProcessor, private Timer {
 
     bool hasEditor() const { return true; }
     AudioProcessorEditor* createEditor() {
-        File exeDir = File::getSpecialLocation(File::currentExecutableFile).getParentDirectory();
-        File bundle = exeDir.getChildFile("js/main.js");
-
-        auto* editor = new reactjuce::GenericEditor(*this, bundle);
+        auto* editor = new CustomEditor(*this);
 
         short updateInterval = 25;
 
@@ -53,7 +52,7 @@ class ChordProcessor : public AudioProcessor, private Timer {
     }
 
     void timerCallback() {
-        if (auto* editor = dynamic_cast<reactjuce::GenericEditor*>(getActiveEditor())) {
+        if (auto* editor = dynamic_cast<CustomEditor*>(getActiveEditor())) {
             std::string multi;
 
             for (const int& x : notes) multi += std::to_string(x) + ",";
