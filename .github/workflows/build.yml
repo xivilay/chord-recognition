@@ -1,40 +1,58 @@
-name: CMakeBuild
+name: CMake
 
-on: [push]
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  BUILD_TYPE: Release
+  PROJECT_NAME: MidiChordRecognition
 
 jobs:
   build:
-    runs-on: windows-latest
-
+    strategy:
+      matrix:
+        runner: ['macos', 'ubuntu', 'windows']
+    runs-on: ${{ matrix.runner }}-latest
+    name: ${{ matrix.runner }}
     steps:
-    - name: Get latest CMake
-      uses: lukka/get-cmake@latest
+      - name: Checkout Source Code
+        uses: actions/checkout@v2
+        with:
+          token: ${{secrets.PAT}}
+          submodules: 'recursive'
 
-    - name: Checkout code
-      uses: actions/checkout@v2
-      with:
-        submodules: recursive
-        token: ${{secrets.PAT}}
+      - name: Set Up Node.js
+        uses: actions/setup-node@v2
 
-    - name: Install Submodule Dependencies
-      working-directory: ./jsui
-      run: yarn install
+      - name: Set Up Yarn
+        run: npm install -g yarn
 
-    - name: Build JS
-      run: ./build_js.bat
+      - name: Install UI Dependencies
+        working-directory: ./jsui
+        run: yarn install
 
-    - name: Build
-      run: ./build.bat
+      - name: Build UI Bundle
+        working-directory: ./jsui
+        run: yarn build
+        
+      - name: Install Linux Deps
+        if: runner.os == 'Linux'
+        run: |
+            sudo apt-get update && sudo apt install libasound2-dev libcurl4-openssl-dev libx11-dev libxinerama-dev libxext-dev libfreetype6-dev libwebkit2gtk-4.0-dev libglu1-mesa-dev
 
-    - name: Get artefacts
-      run: ./post_build.bat
+      - name: Configure CMake
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
 
-    - name: Zip
-      working-directory: ${{ env.BUILD_DIR }}
-      run: cmake -E tar cfv build/windows.zip out
+      - name: Build
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v2
-      with:
-        path: build/windows.zip
-        name: windows-x64
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ matrix.runner }}
+          path: ${{github.workspace}}/build/${{env.PROJECT_NAME}}_artefacts/${{env.BUILD_TYPE}}/**/*.vst3
+          if-no-files-found: error
+          retention-days: 1
