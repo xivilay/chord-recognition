@@ -34,6 +34,8 @@ target_sources(${pluginName} PRIVATE ${sources})
 
 target_compile_definitions(${pluginName} PRIVATE
     JUCE_VST3_CAN_REPLACE_VST2=0
+    JUCE_USE_CURL=0
+    JUCE_WEB_BROWSER=0
 )
 
 target_link_libraries(${pluginName} PUBLIC
