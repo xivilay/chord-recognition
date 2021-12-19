@@ -1,46 +1,55 @@
 cmake_minimum_required(VERSION 3.15)
 
-set(version 0.1.0)
-set(pluginName MidiChordRecognition)
-set(sources src/Main.cpp)
-set(targets VST3)
+set(VERSION 0.1.0)
+set(PROJECT_NAME MidiChordRecognition)
+set(SOURCES src/Main.cpp)
+set(FORMATS VST3)
 
 set(REACT_JUCE "react_juce")
 set(REACT_JUCE_DIR "juce-react/${REACT_JUCE}")
 set(JUCE_DIR "juce-react/ext/juce")
 
-project(${pluginName} VERSION ${version})
+project(${PROJECT_NAME} VERSION ${VERSION})
 
 add_subdirectory(${JUCE_DIR} "juce")
 
 juce_add_module(${REACT_JUCE_DIR})
 
+# add_subdirectory(${REACT_JUCE_DIR}/hermes)
+#     target_compile_definitions(${REACT_JUCE} INTERFACE REACTJUCE_USE_HERMES=1)
+#     target_include_directories(
+#         INTERFACE
+#         ${REACT_JUCE_DIR}/hermes/API/
+#         ${REACT_JUCE_DIR}/hermes/public/
+#     )
+#     target_link_libraries(${REACT_JUCE} INTERFACE hermesapi)
+
 target_compile_definitions(${REACT_JUCE} INTERFACE REACTJUCE_USE_DUKTAPE=1)
 
-juce_add_plugin(${pluginName}
-    VERSION ${version}
+juce_add_plugin(${PROJECT_NAME}
+    VERSION ${VERSION}
     COMPANY_NAME XivilaY
     NEEDS_MIDI_INPUT TRUE
     NEEDS_MIDI_OUTPUT FALSE
     PLUGIN_MANUFACTURER_CODE Xivy
     PLUGIN_CODE Xiv7
-    FORMATS ${targets}
-    PRODUCT_NAME "${pluginName}"
+    FORMATS ${FORMATS}
+    PRODUCT_NAME "${PROJECT_NAME}"
 )
 
 juce_add_binary_data(BinaryData SOURCES
     "jsui/build/js/main.js"
 )
 
-juce_generate_juce_header(${pluginName})
+juce_generate_juce_header(${PROJECT_NAME})
 
-target_sources(${pluginName} PRIVATE ${sources})
+target_sources(${PROJECT_NAME} PRIVATE ${SOURCES})
 
-target_compile_definitions(${pluginName} PRIVATE
+target_compile_definitions(${PROJECT_NAME} PRIVATE
     JUCE_VST3_CAN_REPLACE_VST2=0
 )
 
-target_link_libraries(${pluginName} PUBLIC
+target_link_libraries(${PROJECT_NAME} PUBLIC
     juce::juce_recommended_config_flags
     juce::juce_recommended_lto_flags
     juce::juce_recommended_warning_flags

@@ -7,7 +7,7 @@ class ChordProcessor : public AudioProcessor, private Timer {
     ChordProcessor() : AudioProcessor(BusesProperties()) {}
     ~ChordProcessor() { stopTimer(); }
 
-    const String getName() const { return JucePlugin_Name; }
+    const String getName() const { return ProjectInfo::projectName; }
 
     bool acceptsMidi() const { return true; }
     bool producesMidi() const { return false; }
