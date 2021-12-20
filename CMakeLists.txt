@@ -9,6 +9,10 @@ set(REACT_JUCE "react_juce")
 set(REACT_JUCE_DIR "juce-react/${REACT_JUCE}")
 set(JUCE_DIR "juce-react/ext/juce")
 
+if(CMAKE_BUILD_TYPE MATCHES "Debug")
+    set(PROJECT_NAME "${PROJECT_NAME}Dev")
+endif()
+
 project(${PROJECT_NAME} VERSION ${VERSION})
 
 add_subdirectory(${JUCE_DIR} "juce")

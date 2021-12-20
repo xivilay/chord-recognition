@@ -8,7 +8,7 @@ on:
 
 env:
   BUILD_TYPE: Release
-  PROJECT_NAME: MidiChordRecognition
+  PROJECT_NAME: ChordRecognition
 
 jobs:
   build:
