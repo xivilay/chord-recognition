@@ -43,7 +43,6 @@ class ChordProcessor : public AudioProcessor, private Timer {
 
         editor->setResizable(true, true);
         editor->setResizeLimits(WIDTH, HEIGHT, WIDTH * 2, HEIGHT * 2);
-        editor->getConstrainer()->setFixedAspectRatio(WIDTH / HEIGHT);
         editor->setSize(WIDTH, HEIGHT);
 
         startTimer(updateInterval);
@@ -64,8 +63,8 @@ class ChordProcessor : public AudioProcessor, private Timer {
    private:
     std::unordered_set<int> notes;
 
-    const short WIDTH = 740;
-    const short HEIGHT = 840;
+    const short WIDTH = 500;
+    const short HEIGHT = 100;
 
     void storeNotes(MidiBuffer& midiMessages) {
         for (const auto metadata : midiMessages) {
