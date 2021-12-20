@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 
 set(VERSION 0.1.0)
-set(PROJECT_NAME MidiChordRecognition)
+set(PROJECT_NAME ChordRecognition)
 set(SOURCES src/Main.cpp)
 set(FORMATS VST3)
 
