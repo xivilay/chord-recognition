@@ -1,3 +1,12 @@
+# Chord Recognition
+
+## Description:
+
+Midi plugin showing chords from midi input.
+
+## Screenshots
+<img src="./screen.png" alt="Plugin screenshot" />
+
 ## How to build
 
 ### Windows 
