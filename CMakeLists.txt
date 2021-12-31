@@ -36,6 +36,8 @@ juce_add_binary_data(BinaryData SOURCES
     "jsui/build/js/main.js"
 )
 
+set_target_properties(BinaryData PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+
 juce_generate_juce_header(${PROJECT_NAME})
 
 target_sources(${PROJECT_NAME} PRIVATE ${SOURCES})
